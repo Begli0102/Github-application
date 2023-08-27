@@ -103,15 +103,16 @@ function App () {
             onChange={handleChange}
             fullWidth
           />
-          <Button
-            type='submit'
-            disabled={username.length === 0}
-            variant='contained'
-            onClick={handleGetRepos}
-          >
-            Search
-          </Button>
         </Box>
+
+        <Button
+          type='submit'
+          disabled={username.length === 0}
+          variant='contained'
+          onClick={handleGetRepos}
+        >
+          Search
+        </Button>
       </div>
       <div>{loading && <CircularProgress />}</div>
       <div className='container__result'> {renderRepo()} </div>
