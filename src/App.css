@@ -29,7 +29,7 @@
 .single__repo {
   text-align: left;
   cursor: pointer;
-  min-width: 300px;
+  min-width: 370px;
 }
 
 .dialog__content__header {
@@ -45,9 +45,11 @@
 .MuiDialogContent-root {
   background-color: rgb(243, 239, 239);
 }
-
+.MuiPaper-root {
+  margin: 0 auto;
+}
 .MuiTypography-root span {
   color: rgb(80, 27, 27);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1rem;
 }

@@ -2,7 +2,7 @@ import _Cypress from 'cypress'
 
 describe('Form spec', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000')
+    cy.visit('http://localhost:3001')
   })
   it('Ensures the existance of element in the form', () => {
     const app = '.app .app__container'

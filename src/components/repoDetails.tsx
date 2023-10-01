@@ -11,22 +11,27 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { IRepo } from '../interface'
 import '../App.css'
+import { useRecoilState } from 'recoil'
+import { RepoState } from '../recoil/repo'
 
-interface IRepoDetails {
-  details: IRepo | undefined
-  loadingDetails: boolean
-  open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
+// interface IRepoDetails {
+//   details: IRepo | undefined
+//   loadingDetails: boolean
+//   open: boolean
+//   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+// }
 
-const RepoDetails = ({
-  details,
-  loadingDetails,
-  open,
-  setOpen
-}: IRepoDetails) => {
+const RepoDetails = () => {
+  //recoil
+  const [repoState, setRepoState] = useRecoilState(RepoState)
+  const { details, loadingDetails, open } = repoState
+
+  //closes modal dialog
   const handleClose = () => {
-    setOpen(false)
+    setRepoState({
+      ...repoState,
+      open: false
+    })
   }
 
   if (loadingDetails) {
@@ -44,8 +49,8 @@ const RepoDetails = ({
       >
         <DialogTitle id='responsive-dialog-title'>
           <div className='dialog__content__header'>
-            <Avatar alt='Username' src={details?.owner.avatar_url} />
-            <Typography gutterBottom> {details?.owner.login}</Typography>
+            <Avatar alt='Username' src={details.owner.avatar_url} />
+            <Typography gutterBottom> {details.owner.login}</Typography>
             <IconButton
               aria-label='close'
               onClick={handleClose}
@@ -62,14 +67,14 @@ const RepoDetails = ({
         <DialogContent>
           <div className='dialog__content__body'>
             <Typography gutterBottom>
-              <span>Repository name : </span> {details?.name}
+              <span>Repository name : </span> {details.name}
             </Typography>
             <Typography gutterBottom>
-              <span>Created at :</span> {details?.created_at}
+              <span>Created at :</span> {details.created_at}
             </Typography>
             <Typography gutterBottom variant='body1'>
               <span>Language : </span>
-              {details?.language === null ? ' no data' : details?.language}
+              {details.language === null ? ' no data' : details.language}
             </Typography>
           </div>
         </DialogContent>

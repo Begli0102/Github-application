@@ -14,20 +14,25 @@ import {
 import axios from 'axios'
 import RepoDetails from './components/repoDetails'
 import { IRepo } from './interface'
+import { useRecoilState } from 'recoil'
+import { RepoState } from './recoil/repo'
 
 function App () {
+  //useState for local state
   const [username, setUsername] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [repos, setRepos] = useState<IRepo[]>([])
-  const [details, setDetails] = useState<IRepo>()
-  const [loadingDetails, setLoadingDetails] = useState<boolean>(false)
-  const [open, setOpen] = useState<boolean>(false)
 
+  //recoil for global state
+  const [repoState, setRepoState] = useRecoilState(RepoState)
+
+  // tracking of a change in input
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value
     setUsername(inputValue)
   }
 
+  //fetching repositories
   const handleGetRepos = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
@@ -39,28 +44,42 @@ function App () {
         setLoading(false)
         setRepos(data)
       })
+      .catch(err => {
+        console.log(err.message)
+      })
   }
 
-  const getRepoDetails = async (repoName: string) => {
-    setLoadingDetails(true)
-    await axios
+  //fetching details from a specific repository
+  const getRepoDetails = (repoName: string) => {
+    setRepoState({
+      ...repoState,
+      loadingDetails: true
+    })
+    axios
       .get(`https://api.github.com/repos/${username}/${repoName}`)
       .then(res => {
         const data = res.data
-        console.log(data)
-        setLoadingDetails(false)
-        setDetails(data)
+        //recoil
+        setRepoState({
+          ...repoState,
+          loadingDetails: false,
+          details: data,
+          open: true
+        })
       })
-    setOpen(true)
+      .catch(err => {
+        console.log(err.message)
+      })
   }
 
+  // renders all repositories after fetching them
   const renderRepo = () => {
     return repos.map((repo: IRepo, index: number) => {
       return (
         <div className='single__repo' key={repo.id}>
-          <Card sx={{ maxWidth: 345 }}>
+          <Card sx={{ maxWidth: 400 }}>
             <CardContent>
-              <Typography variant='h6' sx={{}}>
+              <Typography variant='h6'>
                 {index + 1} - {repo.name}
               </Typography>
             </CardContent>
@@ -75,6 +94,7 @@ function App () {
     })
   }
 
+  // if any changes occur in an input field
   useEffect(() => {
     setRepos([])
   }, [username])
@@ -107,7 +127,7 @@ function App () {
 
         <Button
           type='submit'
-          disabled={username.length === 0}
+          disabled={username === '' || repos.length !== 0}
           variant='contained'
           onClick={handleGetRepos}
         >
@@ -116,12 +136,7 @@ function App () {
       </div>
       <div>{loading && <CircularProgress />}</div>
       <div className='container__result'> {renderRepo()} </div>
-      <RepoDetails
-        details={details}
-        loadingDetails={loadingDetails}
-        open={open}
-        setOpen={setOpen}
-      />
+      <RepoDetails />
     </div>
   )
 }
