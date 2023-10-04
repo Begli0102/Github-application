@@ -1,12 +1,12 @@
 import _Cypress from 'cypress'
 
 describe('Form spec', () => {
+  const app = '.app .app__container'
+
   beforeEach(() => {
     cy.visit('http://localhost:3001')
   })
   it('Ensures the existance of element in the form', () => {
-    const app = '.app .app__container'
-
     // Title
     cy.get(app)
     cy.get('.MuiTypography-root')
@@ -34,5 +34,20 @@ describe('Form spec', () => {
       .should('exist')
       .should('have.length', '1')
     cy.get('.MuiButton-root').should('not.be.disabled')
+  })
+
+  it.only('Ensure that result component ', () => {
+    // is not rendered before search button is clicked
+    cy.get(app)
+    cy.get('#outlined-error')
+      .should('exist')
+      .should('have.length', '1')
+    cy.get('.container__result').should('not.be.visible')
+
+    // is rendered after search button is clicked
+    cy.get(app)
+    cy.get('#outlined-error').type('Begli0102')
+    cy.get('.MuiButton-root').click()
+    cy.get('.container__result').should('be.visible')
   })
 })
