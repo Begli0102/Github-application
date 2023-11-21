@@ -36,7 +36,7 @@ describe('Form spec', () => {
     cy.get('.MuiButton-root').should('not.be.disabled')
   })
 
-  it.only('Ensure that result component exist', () => {
+  it('Ensure that result component exist', () => {
     // is not rendered before search button is clicked
     cy.get(app)
     cy.get('#outlined-error')
