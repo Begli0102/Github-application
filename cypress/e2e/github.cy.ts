@@ -4,7 +4,7 @@ describe('Form spec', () => {
   const app = '.app .app__container'
 
   beforeEach(() => {
-    cy.visit('http://localhost:3001')
+    cy.visit('https://github-application-chi.vercel.app/')
   })
   it('Ensures the existance of element in the form', () => {
     // Title
@@ -36,7 +36,7 @@ describe('Form spec', () => {
     cy.get('.MuiButton-root').should('not.be.disabled')
   })
 
-  it.only('Ensure that result component ', () => {
+  it.only('Ensure that result component exist', () => {
     // is not rendered before search button is clicked
     cy.get(app)
     cy.get('#outlined-error')
